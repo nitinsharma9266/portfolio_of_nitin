@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nitin Sharma | Flutter Developer Intern Portfolio</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            flutter: '#02569B',
+                            accent: '#38BDF8',
+                            cyan: '#06B6D4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0284c7;
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card-hover:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(56, 189, 248, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(2, 132, 199, 0.25);
+        }
+
+        .glass-nav {
+            background: rgba(3, 7, 18, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gradient text: standard + WebKit properties fix CSS warnings */
+        .gradient-text {
+            background: linear-gradient(135deg,
+                    #38bdf8 0%,
+                    #818cf8 50%,
+                    #c084fc 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-flutter {
+            background: linear-gradient(135deg,
+                    #02569B 0%,
+                    #0175C2 50%,
+                    #13B9F6 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            background: linear-gradient(135deg,
+                    rgba(56, 189, 248, 0.3),
+                    rgba(129, 140, 248, 0.1),
+                    transparent);
+            padding: 1px;
+        }
+
+        /* Animated background canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-float-delayed {
+            animation: float 7s ease-in-out 2s infinite;
+        }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- 3D Canvas Container -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Main Content Wrapper -->
+    <div class="content-layer min-h-screen flex flex-col justify-between">
+
+        <!-- Navigation Bar -->
+        <header class="fixed top-0 left-0 w-full z-50 glass-nav transition-all duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+
+                <a href="#hero" class="flex items-center space-x-3 group">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-sky-500/30 group-hover:scale-105 transition-transform duration-300">
+                        NS
+                    </div>
+
+                    <span class="font-bold text-lg tracking-wide text-white group-hover:text-sky-400 transition-colors">
+                        Nitin<span class="text-sky-400">.dev</span>
+                    </span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
+                    <a href="#about" class="hover:text-sky-400 transition-colors py-1">About</a>
+                    <a href="#skills" class="hover:text-sky-400 transition-colors py-1">Skills</a>
+                    <a href="#projects" class="hover:text-sky-400 transition-colors py-1">Projects</a>
+                    <a href="#education" class="hover:text-sky-400 transition-colors py-1">Education</a>
+
+                    <a href="#contact"
+                        class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-semibold hover:shadow-lg hover:shadow-sky-500/25 hover:scale-105 active:scale-95 transition-all duration-300">
+                        Contact Me
+                    </a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false"
+                        class="text-gray-300 hover:text-white p-2 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div id="mobile-menu" class="hidden md:hidden glass-card border-b border-gray-800 px-4 pt-2 pb-6 space-y-3">
+                <a href="#about" class="block py-2 text-gray-300 hover:text-sky-400">About</a>
+                <a href="#skills" class="block py-2 text-gray-300 hover:text-sky-400">Skills</a>
+                <a href="#projects" class="block py-2 text-gray-300 hover:text-sky-400">Projects</a>
+                <a href="#education" class="block py-2 text-gray-300 hover:text-sky-400">Education</a>
+                <a href="#contact"
+                    class="block py-2.5 text-center rounded-xl bg-sky-500 text-white font-semibold">Contact Me</a>
+            </div>
+        </header>
+
+        <!-- Main Sections -->
+        <main class="flex-grow pt-20">
+
+            <!-- Hero Section -->
+            <section id="hero"
+                class="min-h-[90vh] flex items-center justify-center relative px-4 sm:px-6 lg:px-8 py-12">
+                <div class="max-w-5xl mx-auto text-center space-y-8">
+
+                    <div
+                        class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-card border border-sky-500/30 text-sky-400 text-xs sm:text-sm font-mono tracking-wide animate-pulse">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span>Available for Flutter Developer Internships</span>
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-none text-white">
+                        Hi, I'm <span class="gradient-text">Nitin Sharma</span>
+                    </h1>
+
+                    <p class="text-xl sm:text-2xl text-sky-200/80 font-medium max-w-2xl mx-auto">
+                        Flutter Developer Intern & B.Tech CSE Student
+                    </p>
+
+                    <p class="text-base sm:text-lg text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                        Aspiring Flutter Developer focused on building Android and iOS applications with Dart and
+                        Flutter. Interested in clean UI design, practical problem-solving, and building useful projects.
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+                        <a href="#projects"
+                            class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-medium hover:shadow-xl hover:shadow-sky-500/30 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center space-x-2">
+                            <span>Explore Projects</span>
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
+                        </a>
+
+                        <a href="#contact"
+                            class="px-8 py-3.5 rounded-xl glass-card text-gray-200 hover:text-white hover:border-sky-500/50 hover:scale-105 active:scale-95 transition-all duration-300">
+                            Get In Touch
+                        </a>
+                    </div>
+
+                    <!-- Quick Contact Details -->
+                    <div class="pt-8 flex flex-wrap justify-center gap-6 text-gray-400 text-sm">
+
+                        <span class="flex items-center space-x-2">
+                            <i class="fa-solid fa-location-dot text-sky-400"></i>
+                            <span>Hardoi, Uttar Pradesh, India</span>
+                        </span>
+
+                        <a href="tel:+919266149607"
+                            class="flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                            <i class="fa-solid fa-phone text-sky-400"></i>
+                            <span>09266149607</span>
+                        </a>
+
+                        <a href="https://github.com/nitinsharma9266" target="_blank" rel="noopener noreferrer"
+                            class="flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                            <i class="fa-brands fa-github text-sky-400"></i>
+                            <span>GitHub</span>
+                        </a>
+
+                        <a href="mailto:nitinsharma926614@gmail.com"
+                            class="flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                            <i class="fa-solid fa-envelope text-sky-400"></i>
+                            <span>Email</span>
+                        </a>
+
+                        <a href="https://www.linkedin.com/in/nitin-sharma-3rd-0725b8425/" target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center space-x-2 hover:text-sky-400 transition-colors">
+                            <i class="fa-brands fa-linkedin text-sky-400"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About / Career Objective -->
+            <section id="about" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
+                        About <span class="gradient-text">Me</span>
+                    </h2>
+                    <div class="w-16 h-1 bg-sky-500 mx-auto rounded-full"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+
+                    <div class="md:col-span-7 glass-card p-8 rounded-3xl space-y-6 border border-gray-800">
+                        <div class="flex items-center space-x-3 text-sky-400">
+                            <i class="fa-solid fa-bullseye text-2xl"></i>
+                            <h3 class="text-xl font-semibold text-white">Career Objective</h3>
+                        </div>
+
+                        <p class="text-gray-300 text-lg leading-relaxed">
+                            My objective is to secure a
+                            <strong class="text-sky-400 font-semibold">Flutter Developer Internship</strong>
+                            where I can apply my Dart and Flutter skills, contribute to real-world mobile applications,
+                            and continue improving my software development abilities.
+                        </p>
+
+                        <p class="text-gray-400 text-base leading-relaxed">
+                            I am a B.Tech 3rd-year student at Delhi Institute of Engineering and Technology College,
+                            Meerut. I have worked on projects involving Flutter, Dart, Java, Python, web basics, and
+                            data libraries.
+                        </p>
+
+                        <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800/60">
+                            <div>
+                                <span class="block text-gray-500 text-xs font-mono uppercase">Primary Focus</span>
+                                <span class="text-white font-medium">Flutter App Development</span>
+                            </div>
+
+                            <div>
+                                <span class="block text-gray-500 text-xs font-mono uppercase">Status</span>
+                                <span class="text-emerald-400 font-medium">B.Tech 3rd Year</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Highlights -->
+                    <div class="md:col-span-5 grid grid-cols-1 gap-4">
+
+                        <div class="glass-card p-6 rounded-2xl border border-gray-800/80 flex items-start space-x-4">
+                            <div class="p-3 bg-sky-500/10 rounded-xl text-sky-400">
+                                <i class="fa-mobile-screen-button text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">Mobile Architecture</h4>
+                                <p class="text-gray-400 text-sm">Widgets, Forms, Custom Navigation, and State
+                                    Integration.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-gray-800/80 flex items-start space-x-4">
+                            <div class="p-3 bg-indigo-500/10 rounded-xl text-indigo-400">
+                                <i class="fa-solid fa-plug text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">REST API Integration</h4>
+                                <p class="text-gray-400 text-sm">Fetching and rendering dynamic real-time data
+                                    efficiently.</p>
+                            </div>
+                        </div>
+
+                        <div class="glass-card p-6 rounded-2xl border border-gray-800/80 flex items-start space-x-4">
+                            <div class="p-3 bg-purple-500/10 rounded-xl text-purple-400">
+                                <i class="fa-solid fa-code text-2xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">Core Java & OOP</h4>
+                                <p class="text-gray-400 text-sm">File Handling, Exception Handling, and Data Processing.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technical Skills -->
+            <section id="skills" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
+                        Technical <span class="gradient-text">Skills</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base">Core technologies and frameworks I work with</p>
+                    <div class="w-16 h-1 bg-sky-500 mx-auto rounded-full mt-3"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Flutter and Mobile -->
+                    <div class="glass-card p-6 rounded-2xl border border-gray-800 glass-card-hover space-y-4">
+                        <div class="flex items-center space-x-3 text-sky-400">
+                            <i class="fa-solid fa-layer-group text-2xl"></i>
+                            <h3 class="text-xl font-bold text-white">Flutter & Mobile</h3>
+                        </div>
+
+                        <ul class="space-y-2 text-gray-300 text-sm">
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Flutter</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-sky-500/20 text-sky-300 font-mono">Learning</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Dart Language</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-sky-500/20 text-sky-300 font-mono">Primary</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Custom UI & Widgets</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-sky-500/20 text-sky-300 font-mono">Practice</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>REST API Integration</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-sky-500/20 text-sky-300 font-mono">Practice</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Programming Languages -->
+                    <div class="glass-card p-6 rounded-2xl border border-gray-800 glass-card-hover space-y-4">
+                        <div class="flex items-center space-x-3 text-indigo-400">
+                            <i class="fa-solid fa-laptop-code text-2xl"></i>
+                            <h3 class="text-xl font-bold text-white">Languages</h3>
+                        </div>
+
+                        <ul class="space-y-2 text-gray-300 text-sm">
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Dart</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono">Primary</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Java</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-indigo-500/20 text-indigo-300 font-mono">Learning</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>C</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-gray-700/50 text-gray-300 font-mono">Basic</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Python</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-gray-700/50 text-gray-300 font-mono">Basic</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Core Concepts and Web -->
+                    <div class="glass-card p-6 rounded-2xl border border-gray-800 glass-card-hover space-y-4">
+                        <div class="flex items-center space-x-3 text-purple-400">
+                            <i class="fa-solid fa-gears text-2xl"></i>
+                            <h3 class="text-xl font-bold text-white">Core Concepts & Web</h3>
+                        </div>
+
+                        <ul class="space-y-2 text-gray-300 text-sm">
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Object-Oriented Programming</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-purple-500/20 text-purple-300 font-mono">Core</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>File & Exception Handling</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-purple-500/20 text-purple-300 font-mono">Core</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>HTML / CSS / Basic JavaScript</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-purple-500/20 text-purple-300 font-mono">Exposure</span>
+                            </li>
+
+                            <li class="flex items-center justify-between p-2 rounded-lg bg-gray-900/40">
+                                <span>Input Validation</span>
+                                <span
+                                    class="text-xs px-2 py-1 rounded bg-purple-500/20 text-purple-300 font-mono">Core</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Python and Data Libraries -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                    <div class="glass-card p-6 rounded-2xl border border-gray-800 glass-card-hover space-y-4">
+                        <div class="flex items-center space-x-3 text-emerald-400">
+                            <i class="fa-solid fa-chart-column text-2xl"></i>
+                            <h3 class="text-xl font-bold text-white">Python & Data Libraries</h3>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">Python</span>
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">NumPy</span>
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">Pandas</span>
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">Matplotlib</span>
+                        </div>
+                    </div>
+
+                    <!-- Web Basics -->
+                    <div class="glass-card p-6 rounded-2xl border border-gray-800 glass-card-hover space-y-4">
+                        <div class="flex items-center space-x-3 text-amber-400">
+                            <i class="fa-solid fa-code text-2xl"></i>
+                            <h3 class="text-xl font-bold text-white">Web Basics</h3>
+                        </div>
+
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">HTML</span>
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">CSS</span>
+                            <span class="px-3 py-2 rounded-lg bg-gray-900/60 text-gray-200">Basic JavaScript</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tools and Workflow -->
+                <div
+                    class="mt-12 glass-card p-6 rounded-2xl border border-gray-800 flex flex-wrap items-center justify-between gap-4">
+                    <span class="text-gray-400 font-mono text-sm uppercase tracking-wider">Tools & Workflow:</span>
+
+                    <div class="flex flex-wrap gap-3">
+                        <span
+                            class="px-4 py-2 rounded-xl bg-gray-800/80 text-sky-400 font-mono text-sm border border-gray-700/50 flex items-center gap-2">
+                            <i class="fa-brands fa-git-alt text-amber-500"></i> Git
+                        </span>
+
+                        <span
+                            class="px-4 py-2 rounded-xl bg-gray-800/80 text-sky-400 font-mono text-sm border border-gray-700/50 flex items-center gap-2">
+                            <i class="fa-brands fa-github text-white"></i> GitHub
+                        </span>
+
+                        <span
+                            class="px-4 py-2 rounded-xl bg-gray-800/80 text-sky-400 font-mono text-sm border border-gray-700/50 flex items-center gap-2">
+                            <i class="fa-solid fa-code text-blue-400"></i> VS Code
+                        </span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
+                        Featured <span class="gradient-text">Projects</span>
+                    </h2>
+
+                    <p class="text-gray-400 text-sm sm:text-base">
+                        Select a technology filter to sort through my work
+                    </p>
+
+                    <div class="w-16 h-1 bg-sky-500 mx-auto rounded-full mt-3 mb-8"></div>
+
+                    <!-- Project Filter Buttons -->
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button onclick="filterProjects('all')"
+                            class="project-filter-btn px-5 py-2 rounded-xl font-medium text-sm transition-all duration-300 bg-sky-500 text-white shadow-lg shadow-sky-500/20"
+                            data-filter="all">
+                            All Projects
+                        </button>
+
+                        <button onclick="filterProjects('flutter')"
+                            class="project-filter-btn px-5 py-2 rounded-xl font-medium text-sm transition-all duration-300 glass-card text-gray-300 hover:text-white"
+                            data-filter="flutter">
+                            Flutter / Dart
+                        </button>
+
+                        <button onclick="filterProjects('java')"
+                            class="project-filter-btn px-5 py-2 rounded-xl font-medium text-sm transition-all duration-300 glass-card text-gray-300 hover:text-white"
+                            data-filter="java">
+                            Java Console Apps
+                        </button>
+
+                        <button onclick="filterProjects('python')"
+                            class="project-filter-btn px-5 py-2 rounded-xl font-medium text-sm transition-all duration-300 glass-card text-gray-300 hover:text-white"
+                            data-filter="python">
+                            Python Projects
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Project Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Sky Weather -->
+                    <div class="project-card glass-card rounded-2xl overflow-hidden border border-gray-800 glass-card-hover flex flex-col justify-between"
+                        data-category="flutter">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-cloud-sun"></i>
+                                </div>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-sky-500/10 text-sky-400 text-xs font-mono border border-sky-500/20">Flutter</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white">Sky Weather</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                A weather application concept built with Flutter, focused on presenting current weather
+                                information in a clear interface.
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Flutter</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Dart</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Weather API</span>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6">
+                            <span class="text-sky-400 text-sm font-medium">Mobile Application <i
+                                    class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Instagram Clone -->
+                    <div class="project-card glass-card rounded-2xl overflow-hidden border border-gray-800 glass-card-hover flex flex-col justify-between"
+                        data-category="flutter">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </div>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-pink-500/10 text-pink-400 text-xs font-mono border border-pink-500/20">Flutter
+                                    UI</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white">Instagram Clone</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                A social-media UI practice project featuring a welcome screen, stories, and a post feed
+                                layout.
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Flutter</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Dart</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">UI Design</span>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6">
+                            <span class="text-pink-400 text-sm font-medium">Mobile UI <i
+                                    class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Bank Management System -->
+                    <div class="project-card glass-card rounded-2xl overflow-hidden border border-gray-800 glass-card-hover flex flex-col justify-between"
+                        data-category="java">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-building-columns"></i>
+                                </div>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-mono border border-emerald-500/20">Java</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white">Bank Management System</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                A programming project representing basic banking operations and menu-driven account
+                                management.
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Java</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">OOP</span>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6">
+                            <span class="text-emerald-400 text-sm font-medium">Console Application <i
+                                    class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Jarvis AI Assistant -->
+                    <div class="project-card glass-card rounded-2xl overflow-hidden border border-gray-800 glass-card-hover flex flex-col justify-between"
+                        data-category="python">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-violet-500/20 text-violet-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-microphone-lines"></i>
+                                </div>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-violet-500/10 text-violet-400 text-xs font-mono border border-violet-500/20">Python</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white">Jarvis AI Assistant</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                A personal assistant project exploring voice input, spoken responses, and utility
+                                integrations.
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Python</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Speech</span>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6">
+                            <span class="text-violet-400 text-sm font-medium">AI Assistant <i
+                                    class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Personal AI Chatbot -->
+                    <div class="project-card glass-card rounded-2xl overflow-hidden border border-gray-800 glass-card-hover flex flex-col justify-between"
+                        data-category="python">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-xs font-mono border border-cyan-500/20">Python</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white">Personal AI Chatbot</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                A chatbot interface project designed to explore conversational interactions with a
+                                simple app UI.
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Python</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Streamlit</span>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6">
+                            <span class="text-cyan-400 text-sm font-medium">Chatbot <i
+                                    class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                    <!-- Calculator -->
+                    <div class="project-card glass-card rounded-2xl overflow-hidden border border-gray-800 glass-card-hover flex flex-col justify-between"
+                        data-category="java">
+                        <div class="p-6 space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div
+                                    class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-calculator"></i>
+                                </div>
+                                <span
+                                    class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-mono border border-amber-500/20">Programming</span>
+                            </div>
+
+                            <h3 class="text-xl font-bold text-white">Calculator</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                A calculator project for practicing arithmetic operations, input handling, and interface
+                                logic.
+                            </p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Programming</span>
+                                <span class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-300">Logic</span>
+                            </div>
+                        </div>
+
+                        <div class="px-6 pb-6">
+                            <span class="text-amber-400 text-sm font-medium">Utility App <i
+                                    class="fa-solid fa-arrow-right ml-1"></i></span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section id="education" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
+                        My <span class="gradient-text">Education</span>
+                    </h2>
+                    <div class="w-16 h-1 bg-sky-500 mx-auto rounded-full mt-3"></div>
+                </div>
+
+                <div class="max-w-3xl mx-auto glass-card p-8 rounded-3xl border border-gray-800 flex items-start gap-5">
+                    <div class="p-4 rounded-2xl bg-sky-500/10 text-sky-400 text-2xl">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-white">B.Tech — Computer Science Engineering</h3>
+                        <p class="text-sky-300 mt-2">Delhi Institute of Engineering and Technology College, Meerut</p>
+                        <p class="text-gray-400 mt-2">B.Tech 3rd Year</p>
+                    </div>
+                </div>
+
+
+                <!-- Class 10th -->
+                <div
+                    class="max-w-3xl mx-auto mt-6 glass-card p-8 rounded-3xl border border-gray-800 flex items-start gap-5">
+                    <div class="p-4 rounded-2xl bg-emerald-500/10 text-emerald-400 text-2xl">
+                        <i class="fa-solid fa-school"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-white">
+                            Class 10th — High School
+                        </h3>
+
+                        <p class="text-sky-300 mt-2">
+                            Uttar Pradesh Board (UP Board)
+                        </p>
+
+                        <div class="flex flex-wrap items-center gap-4 mt-3">
+                            <span class="text-gray-400 text-sm">
+                                <i class="fa-regular fa-calendar mr-2"></i>2022
+                            </span>
+
+                            <span class="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-semibold">
+                                84%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 12th -->
+                <div
+                    class="max-w-3xl mx-auto mt-6 glass-card p-8 rounded-3xl border border-gray-800 flex items-start gap-5">
+                    <div class="p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 text-2xl">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-bold text-white">
+                            Class 12th — Intermediate
+                        </h3>
+
+                        <p class="text-sky-300 mt-2">
+                            Uttar Pradesh Board (UP Board)
+                        </p>
+
+                        <div class="flex flex-wrap items-center gap-4 mt-3">
+                            <span class="text-gray-400 text-sm">
+                                <i class="fa-regular fa-calendar mr-2"></i>2024
+                            </span>
+
+                            <span class="px-3 py-1 rounded-lg bg-indigo-500/10 text-indigo-400 font-semibold">
+                                81.66%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl sm:text-4xl font-bold text-white mb-2">
+                        Get In <span class="gradient-text">Touch</span>
+                    </h2>
+
+                    <p class="text-gray-400 mt-3">
+                        Interested in working together? Contact me for Flutter Developer Internship opportunities.
+                    </p>
+
+                    <div class="w-16 h-1 bg-sky-500 mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+
+                    <!-- Email -->
+                    <a href="mailto:nitinsharma926614@gmail.com"
+                        class="glass-card glass-card-hover p-6 rounded-2xl border border-gray-800 flex items-center gap-4">
+                        <div class="p-3 rounded-xl bg-sky-500/10 text-sky-400 text-xl">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-500 text-sm">Email</p>
+                            <p class="text-white break-all">nitinsharma926614@gmail.com</p>
+                        </div>
+                    </a>
+
+                    <!-- Phone -->
+                    <a href="tel:+919266149607"
+                        class="glass-card glass-card-hover p-6 rounded-2xl border border-gray-800 flex items-center gap-4">
+                        <div class="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 text-xl">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-500 text-sm">Phone</p>
+                            <p class="text-white">09266149607</p>
+                        </div>
+                    </a>
+
+                    <!-- GitHub -->
+                    <a href="https://github.com/nitinsharma9266" target="_blank" rel="noopener noreferrer"
+                        class="glass-card glass-card-hover p-6 rounded-2xl border border-gray-800 flex items-center gap-4">
+                        <div class="p-3 rounded-xl bg-gray-500/10 text-white text-xl">
+                            <i class="fa-brands fa-github"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-500 text-sm">GitHub</p>
+                            <p class="text-white">github.com/nitinsharma9266</p>
+                        </div>
+                    </a>
+
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/in/nitin-sharma-3rd-0725b8425/" target="_blank"
+                        rel="noopener noreferrer"
+                        class="glass-card glass-card-hover p-6 rounded-2xl border border-gray-800 flex items-center gap-4">
+                        <div class="p-3 rounded-xl bg-blue-500/10 text-blue-400 text-xl">
+                            <i class="fa-brands fa-linkedin"></i>
+                        </div>
+
+                        <div>
+                            <p class="text-gray-500 text-sm">LinkedIn</p>
+                            <p class="text-white">Nitin Sharma</p>
+                        </div>
+                    </a>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="content-layer border-t border-gray-800/80 px-4 py-8 text-center text-gray-500 text-sm">
+            <p>© <span id="current-year"></span> Nitin Sharma. Built with HTML, Tailwind CSS and JavaScript.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Mobile navigation toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            mobileMenu.classList.toggle('hidden');
+            mobileMenuBtn.setAttribute('aria-expanded', String(!isOpen));
+        });
+
+        // Close mobile menu after selecting a link
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenuBtn.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // Project filter buttons
+        function filterProjects(category) {
+            document.querySelectorAll('.project-card').forEach(card => {
+                const matches =
+                    category === 'all' ||
+                    card.dataset.category === category;
+
+                card.classList.toggle('hidden', !matches);
+            });
+
+            document.querySelectorAll('.project-filter-btn').forEach(button => {
+                const active = button.dataset.filter === category;
+
+                button.classList.toggle('bg-sky-500', active);
+                button.classList.toggle('text-white', active);
+                button.classList.toggle('shadow-lg', active);
+                button.classList.toggle('shadow-sky-500/20', active);
+
+                button.classList.toggle('glass-card', !active);
+                button.classList.toggle('text-gray-300', !active);
+            });
+        }
+
+        // Automatic current year in footer
+        document.getElementById('current-year').textContent =
+            new Date().getFullYear();
+
+        // Animated 3D particle background
+        if (window.THREE) {
+            const canvas = document.getElementById('bg-canvas');
+
+            const scene = new THREE.Scene();
+
+            const camera = new THREE.PerspectiveCamera(
+                65,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000
+            );
+
+            camera.position.z = 45;
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true
+            });
+
+            renderer.setPixelRatio(
+                Math.min(window.devicePixelRatio, 2)
+            );
+
+            renderer.setSize(
+                window.innerWidth,
+                window.innerHeight
+            );
+
+            const particleCount = 180;
+            const positions = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] =
+                    (Math.random() - 0.5) * 100;
+
+                positions[i * 3 + 1] =
+                    (Math.random() - 0.5) * 70;
+
+                positions[i * 3 + 2] =
+                    (Math.random() - 0.5) * 50;
+            }
+
+            const geometry = new THREE.BufferGeometry();
+
+            geometry.setAttribute(
+                'position',
+                new THREE.BufferAttribute(positions, 3)
+            );
+
+            const material = new THREE.PointsMaterial({
+                color: 0x38bdf8,
+                size: 0.13,
+                transparent: true,
+                opacity: 0.75
+            });
+
+            const particles = new THREE.Points(
+                geometry,
+                material
+            );
+
+            scene.add(particles);
+
+            function animate() {
+                requestAnimationFrame(animate);
+
+                particles.rotation.y += 0.0007;
+                particles.rotation.x += 0.0002;
+
+                renderer.render(scene, camera);
+            }
+
+            animate();
+
+            // Resize canvas when window dimensions change
+            window.addEventListener('resize', () => {
+                camera.aspect =
+                    window.innerWidth / window.innerHeight;
+
+                camera.updateProjectionMatrix();
+
+                renderer.setSize(
+                    window.innerWidth,
+                    window.innerHeight
+                );
+            });
+        }
+    </script>
+</body>
+
+</html>
